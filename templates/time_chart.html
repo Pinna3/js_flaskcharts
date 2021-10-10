@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Line Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="{{ url_for('static', filename='Chart.min.js') }}"></script>
+</head>
+<body>
+    <h1>Simple Line Chart</h1>
+    <canvas id="myChart" width='600' height='400'></canvas>
+    <p id='caption'>The chart is displaying a simple line chart.</p> 
+
+    <script>
+        let timeFormat = 'hh:mm:ss'
+
+        function newDateString(hours, minutes, seconds) {
+            return moment().hour(hours).minute(minutes).second(seconds).format(timeFormat);
+        }
+
+        // define the chart data
+        var chartData = {
+        labels : [
+        {% for label in labels %}
+        newDateString({{label.hour}}, {{label.minute}}, {{label.second}}),
+        {% endfor %}
+        ],
+        datasets : [
+        {
+        label: '{{ legend }}',
+        fill: true,
+        lineTension: 0.1,
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "rgba(75,192,192,1)",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+        pointHoverBorderColor: "rgba(220,220,220,1)",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data : [
+        {% for value in values %}
+        {{value}},
+        {% endfor %}
+        ],
+        spanGaps: false
+        },
+        ]
+        }
+
+        // get chart canvas
+        var ctx = document.getElementById("myChart").getContext("2d");
+
+        // create the chart using the chart canvas
+        var myChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        });
+    </script>
+
+</body>
+</html>
