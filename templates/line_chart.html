@@ -1,0 +1,34 @@
+{% extends 'chart.html' %}
+
+{% block script %}
+<script>
+// create the chart using the chart canvas
+let myChart = new Chart(ctx, {
+type: 'line',
+data: chartData,
+options: {
+tooltips: {
+enabled: true,
+mode: 'single',
+callbacks: {
+label: function(tooltipItems, data) {
+return tooltipItems.yLabel + ' degrees';
+}
+}
+},
+}
+});
+// DOESN'T WORK FOR SOME REASON:
+// get chart canvas
+let holder = document.getElementById("myChart");
+
+// get the text element below the chart
+let pointSelected = document.getElementById("caption");
+
+// crete a callback functio nfor updating the selected index on the chart
+holder.onclick = function(evt){
+    let activePoint = myChart.getElementAtEvent(evt);
+    pointSelected.innerHTML = 'Point selected... index: ' + activePoint[0]._index;
+};
+</script>
+{% endblock %}
